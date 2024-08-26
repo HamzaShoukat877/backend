@@ -23,11 +23,10 @@ const registerUser = asyncHandler( async(req,res) => {
         throw new ApiError(409,"User With email or username alerady exist")
     }
 
-    
 
     // check for images,check for avatar
-    const avatarLocalPath = req.files?.avatar?.[0]?.path || null;
-    const coverImageLocalPath = req.files?.coverImage?.[0]?.path || null;
+    const avatarLocalPath = req.files?.avatar[0]?.path
+    const coverImageLocalPath = req.files?.coverImage[0]?.path
 
 
     if(!avatarLocalPath){
@@ -36,7 +35,7 @@ const registerUser = asyncHandler( async(req,res) => {
 
     // upload them cloudinary,avatar
     const avatar =  await uploadOnCloudinary(avatarLocalPath)
-    const converImage =  await uploadOnCloudinary(coverImageLocalPath)
+    const coverImage =  await uploadOnCloudinary(coverImageLocalPath)
 
 
 
@@ -48,7 +47,7 @@ const registerUser = asyncHandler( async(req,res) => {
     const user =  await User.create({
         fullName,
         avatar: avatar.url,
-        // converImage: converImage?.url || "",
+        coverImage: coverImage?.url || "",
         email,
         password,
         userName : userName.toLowerCase()
