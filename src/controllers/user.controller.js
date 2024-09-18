@@ -121,23 +121,19 @@ const loginUser = asyncHandler(async(req, res) => {
     }
 
     // Send response with cookies and user data
-    return res.status(200)
-        .cookie("accessToken", accessToke, options)
-        .cookie("refreshToken", refreshToken, options)
-        .json(new ApiResponse(
-            200,
-            {
-                user: loggedInUser, accessToke, refreshToken
-            },
-            "User logged in successfully"
-        ))
+    return res.status(200).cookie("accessToken",accessToke,options).cookie("refreshToken",refreshToken,options).json(
+        new ApiResponse(200, {accessToken:accessToke, refreshToken:refreshToken, user: loggedInUser}, "User logged in successfully")
+    )
 })
 
 // Controller for user logout
 const logoutUser = asyncHandler(async(req, res) => {
     // Remove refresh token from user document
+    
+    
     await User.findByIdAndUpdate(
         req.user._id,
+        
         {
             $unset: { refreshToken: 1 }
         },
@@ -145,6 +141,7 @@ const logoutUser = asyncHandler(async(req, res) => {
             new: true
         }
     )
+    
 
     const options = {
         httpOnly: true,
